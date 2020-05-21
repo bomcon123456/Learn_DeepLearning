@@ -13,11 +13,12 @@ mpl.rc('axes', labelsize=14)
 mpl.rc('xtick', labelsize=12)
 mpl.rc('ytick', labelsize=12)
 
-def show_image(image):
+def show_image(image, title=None):
     plt.imshow(image, cmap="binary")
     plt.axis('off')
+    if title:
+        plt.title(title)
     
-# Save
 def show_grid(array, labels, class_names=None, n_rows=4, n_cols=10):
     plt.figure(figsize=(n_cols * 1.2, n_rows * 1.2))
     for row in range(n_rows):
@@ -103,3 +104,11 @@ def list_files(path):
 def get_files_from_dir(dirpath, base_name=None, ext=None):
     regex = "{}*{}".format(base_name,'.'+ext if ext else ext)
     return [str(path) for path in dirpath.glob("*")]
+
+def tensor_to_image(tensor):
+    tensor = tensor*255
+    tensor = np.array(tensor, dtype=np.uint8)
+    if np.ndim(tensor)>3:
+      assert tensor.shape[0] == 1
+      tensor = tensor[0]
+    return PIL.Image.fromarray(tensor)
